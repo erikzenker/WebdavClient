@@ -1,4 +1,3 @@
-
 WebdavClient 
 ============
 A very simple C++ interface for the webdav neon lib
@@ -14,6 +13,8 @@ A very simple C++ interface for the webdav neon lib
    + example: g++ main.cc WebdavClient.cc -I . -lneon
 
 ## Example ##
+All methods of WebdavClient class used in a simple example.
+```c++
 
 #include <WebdavClient.h>
 #include <iostream>
@@ -78,6 +79,7 @@ int main(){
 
   return 0;
 }
+```
    
 ## Dependencies ##
  + neon
