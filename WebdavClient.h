@@ -3,9 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <neon/ne_basic.h> /* ne_session */
-#include <neon/ne_uri.h> /* uri */
-#include <neon/ne_props.h> /* ne_prop_result_set */
+#include <neon/ne_props.h> /* ne_prop_result_set, ne_session */
 
 struct WebdavPath {
   WebdavPath(std::string host, std::string path, std::string ressourceType, std::string lastModified, std::string contentType) :
@@ -34,7 +32,6 @@ struct WebdavPath {
   std::string contentType;
 
 };
-
 
 class WebdavClient {
  public:
