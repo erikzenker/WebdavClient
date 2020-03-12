@@ -23,7 +23,7 @@ static const ne_propname fetchProps[] = {
  **/
 WebdavClient::WebdavClient(const std::string url, const unsigned port, const std::string user, const std::string pw){
   ne_sock_init();
-  mSession = ne_session_create("http", url.c_str(), 80);
+  mSession = ne_session_create("http", url.c_str(), port);
   std::vector<std::string> *login = new std::vector<std::string>();
   login->push_back(user);
   login->push_back(pw);
@@ -214,6 +214,24 @@ bool WebdavClient::mkdir(std::string uri){
 bool WebdavClient::rm(std::string uri){
   int res = ne_delete(mSession, uri.c_str());
   if(res!=NE_OK){
+    mError = ne_get_error(mSession);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * @brief Move file or directory on webdav-server
+ *
+ * @param uriFrom Move from
+ * @param uriTp Move to
+ *
+ * @return false if can´t move
+ *         true  otherwise
+ **/
+bool WebdavClient::mv(std::string uriFrom, std::string uriTo){
+  int res = ne_move(mSession, 1, uriFrom.c_str(), uriTo.c_str());
+  if (res!=NE_OK) {
     mError = ne_get_error(mSession);
     return false;
   }

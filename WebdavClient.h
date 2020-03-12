@@ -46,7 +46,7 @@ class WebdavClient {
   bool get(std::string uri, std::string localDestination);
   bool mkdir(std::string uri);
   bool rm(std::string uri);
-
+  bool mv(std::string uriFrom, std::string uriTo);
 
  private:
   static int setLogin(void *userdata, const char *realm, int attempts, char *usernmae, char *password);
