@@ -24,11 +24,9 @@ static const ne_propname fetchProps[] = {
 WebdavClient::WebdavClient(const std::string url, const unsigned port, const std::string user, const std::string pw){
   ne_sock_init();
   mSession = ne_session_create("http", url.c_str(), port);
-  std::vector<std::string> *login = new std::vector<std::string>();
-  login->push_back(user);
-  login->push_back(pw);
-  ne_set_server_auth(mSession, WebdavClient::setLogin, login);
-
+  this->login_info.push_back(user);
+  this->login_info.push_back(pw);
+  ne_set_server_auth(mSession, WebdavClient::setLogin, &login_info);
 }
 
 WebdavClient::~WebdavClient(){
@@ -94,6 +92,12 @@ bool WebdavClient::exist(std::string uri){
   const int depth = NE_DEPTH_ZERO; /* NE_DEPTH_ZERO, NE_DEPTH_ONE, NE_DEPTH_INFINITE */
   std::vector<WebdavPath> * props = new std::vector<WebdavPath>;
   int res = ne_simple_propfind(mSession, uri.c_str(), depth, fetchProps, getProps, props);
+  
+  if (!props->empty()) {
+    props->erase(props->begin());
+  }
+  delete props;
+  
   if(res!=NE_OK){ 
     mError = ne_get_error(mSession);      
     if(mError.find("404")!= std::string::npos){
@@ -102,7 +106,7 @@ bool WebdavClient::exist(std::string uri){
     return false;
      
   } 
-  props->erase(props->begin());
+  
   return true;
 
 }
@@ -120,7 +124,13 @@ std::vector<WebdavPath> WebdavClient::ls(std::string uri){
   const int depth = NE_DEPTH_ONE; /* NE_DEPTH_ZERO, NE_DEPTH_ONE, NE_DEPTH_INFINITE */
   std::vector<WebdavPath> * props = new std::vector<WebdavPath>;
   int res = ne_simple_propfind(mSession, uri.c_str(), depth, fetchProps, WebdavClient::getProps, props);
-   if(res!=NE_OK){
+  
+  if (!props->empty()) {
+    props->erase(props->begin());
+  }
+  delete props;
+  
+  if(res!=NE_OK){
      mError = ne_get_error(mSession); 
      return *props;
    } 
@@ -136,6 +146,12 @@ std::vector<WebdavPath> WebdavClient::tree(std::string uri){
   std::vector<WebdavPath> *props = new std::vector<WebdavPath>;
   const int depth = NE_DEPTH_INFINITE; /* NE_DEPTH_ZERO, NE_DEPTH_ONE, NE_DEPTH_INFINITE */
   int res = ne_simple_propfind(mSession, uri.c_str(), depth, fetchProps, WebdavClient::getProps, props);
+  
+  if (!props->empty()) {
+    props->erase(props->begin());
+  }
+  delete props;
+  
   if(res!=NE_OK){ 
     mError = ne_get_error(mSession);
     return *props;

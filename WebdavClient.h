@@ -54,6 +54,8 @@ class WebdavClient {
   ne_session *mSession;
   std::string mError;
 
+  std::vector<std::string> login_info;
+
 };
 
 #endif /* WebdavClient_H */
