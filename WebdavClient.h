@@ -46,13 +46,15 @@ class WebdavClient {
   bool get(std::string uri, std::string localDestination);
   bool mkdir(std::string uri);
   bool rm(std::string uri);
-
+  bool mv(std::string uriFrom, std::string uriTo);
 
  private:
   static int setLogin(void *userdata, const char *realm, int attempts, char *usernmae, char *password);
   static void getProps(void *userdata, const ne_uri *uri, const ne_prop_result_set *set);
   ne_session *mSession;
   std::string mError;
+
+  std::vector<std::string> login_info;
 
 };
 
